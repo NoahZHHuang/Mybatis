@@ -1,0 +1,5 @@
+/mybatis-learning/.settings/
+/mybatis-learning/target/
+*.classpath
+*.project
+
