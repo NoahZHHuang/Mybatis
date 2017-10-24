@@ -5,7 +5,7 @@ public class Address {
 	private Integer addrId;
 	private String street;
 	private String city;
-	private String zipCodeString;
+	private String zipCode;
 	
 	public Integer getAddrId() {
 		return addrId;
@@ -25,19 +25,20 @@ public class Address {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public String getZipCodeString() {
-		return zipCodeString;
-	}
-	public void setZipCodeString(String zipCodeString) {
-		this.zipCodeString = zipCodeString;
-	}
+
 	
+	public String getZipCode() {
+		return zipCode;
+	}
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
+	}
 	@Override
 	public String toString() {
-		return "Address [addrId=" + addrId + ", street=" + street + ", city=" + city + ", zipCodeString="
-				+ zipCodeString + "]";
+		return "Address [addrId=" + addrId + ", street=" + street + ", city=" + city + ", zipCode=" + zipCode + "]";
 	}
-		
+
+	
 	
 
 }

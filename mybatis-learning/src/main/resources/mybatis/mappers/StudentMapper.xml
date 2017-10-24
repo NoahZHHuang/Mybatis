@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!-- DOCTYPE has to be match the mapper definition precisely -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace is identical with the java interface full path -->
 <mapper namespace="com.noah.mappers.StudentMapper">
 
+    <!-- the "type" in resultMap can be shortly "Student" not "com.noah.domain.Student", because in mybatis-config.xml, the typeAlias convert it -->
 	<resultMap id="StudentResult" type="Student">
 		<id property="studId" column="stud_id"></id>
 		<result property="name" column="name"></result>
@@ -9,7 +12,28 @@
 		<result property="dob" column="dob"></result>
 	</resultMap>
 
-	<select id="findAllStudents" resultMap="StudentResult">
+
+	<!-- the resultMap below bind the fields in Student and Address together
+         it is not good for reusing. So we can extract the Address out
+         embed it into Student with <association/> tag
+	 -->
+	 <resultMap id="StudentWithAddressResult" type="Student">
+	    <id property="studId" column="stud_id"></id>
+		<result property="name" column="name"></result>
+		<result property="email" column="email"></result>
+		<result property="dob" column="dob"></result>
+		<result property="address.addrId" column="addr_id"></result>
+		<result property="address.street" column="street"></result>
+		<result property="address.city" column="city"></result>
+		<result property="address.zipCode" column="zip_code"></result>
+	 </resultMap>
+	 
+	 <select id="findAllStudents" resultMap="StudentResult">
 		select * from students order by name desc
 	</select>
+	
+	 <select id="findStudentWIthAddressById" parameterType="int" resultMap = "StudentWithAddressResult">
+	   select S.stud_id, S.email, S.dob, A.addr_id, A.street, A.city, A.zip_code from students S left join address A on S.addr_id = A.addr_id where S.stud_id = #{id}
+	 </select>
+	 
 </mapper>

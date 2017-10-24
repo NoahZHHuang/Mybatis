@@ -28,10 +28,18 @@ public class StudentService {
 		
 	}
 	
-
-	public static void main (String [] args){
-		StudentService studentService = new StudentService();
-		studentService.findAllStudents().stream().forEach(System.out::println);
+	public Student findStudentWIthAddressById(Integer id){
+		logger.debug("Select student with address by ID {}", id);
+		SqlSession sqlSession = MyBatisSqlSessionFactory.openSession();
+		try{
+			StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
+			return studentMapper.findStudentWIthAddressById(id);
+		}finally{
+			sqlSession.close();
+		}
 	}
+	
+
+
 
 }

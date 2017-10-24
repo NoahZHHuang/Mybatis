@@ -13,7 +13,7 @@ public class MyBatisSqlSessionFactory {
 	public synchronized static SqlSessionFactory getSqlSessionFactory(){
 		if(sqlSessionFactory == null){
 			InputStream inputStream = MyBatisSqlSessionFactory.class.getResourceAsStream("/mybatis/config/mybatis-config.xml");
-			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream,"dev");
+			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream,"dev"); // here can choose a env 
 		}
 		return sqlSessionFactory;
 	}
