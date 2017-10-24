@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noah.mappers.spring.SpringMapper">
+
+    <resultMap id="StudentResult" type="Student">
+		<id property="studId" column="stud_id"></id>
+		<result property="name" column="name"></result>
+		<result property="email" column="email"></result>
+		<result property="dob" column="dob"></result>
+	</resultMap>
+	
+	<insert id="insertStudent" parameterType="Student">
+	   <!-- select key will help to set the studId before inserting
+	        the Student instance will be filled with the studId
+	    -->
+	   <selectKey keyProperty="studId" resultType="int" order="BEFORE">
+	     select nextval('student_seq') 
+	   </selectKey>
+	   insert into students (stud_id, name, email, dob) values (#{studId}, #{name}, #{email}, #{dob})
+	</insert>
+	
+	<select id="findAllStudents" resultMap="StudentResult">
+		select * from students order by name desc
+	</select>
+
+</mapper>
