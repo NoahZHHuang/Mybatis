@@ -36,6 +36,7 @@ public class SpringService {
 		SpringMapper springMapper = sqlSession.getMapper(SpringMapper.class);
 		springMapper.insertStudent(stud_1);
 		springMapper.insertStudent(stud_2);
+		//with spring, we dont need to commit manually for the insert/delete/update, spring will help
 		//throw new RuntimeException("this is an unchecked exception");
 		throw new Exception("this is a checked exception");
 	}
