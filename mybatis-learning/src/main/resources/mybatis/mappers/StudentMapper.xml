@@ -78,6 +78,9 @@
 	</select>
 	
 	<insert id="insertStudent" parameterType="Student">
+	   <!-- select key will help to set the studId before inserting
+	        the Student instance will be filled with the studId
+	    -->
 	   <selectKey keyProperty="studId" resultType="int" order="BEFORE">
 	     select nextval('student_seq') 
 	   </selectKey>

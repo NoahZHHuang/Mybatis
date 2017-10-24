@@ -28,5 +28,6 @@
 	</environments>
 	<mappers>
 	<mapper resource="mybatis/mappers/StudentMapper.xml"></mapper>
+	<mapper resource="mybatis/mappers/TutorAndCourseMapper.xml"></mapper>
 	</mappers>
 </configuration>

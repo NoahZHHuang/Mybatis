@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noah.mappers.TutorAndCourseMapper">
+
+	<resultMap type="com.noah.domain.Course" id="CourseResult">
+		<id property="courseId" column="course_id"/>
+		<result property="name" column="name"/>
+		<result property="description" column="description"/>
+		<result property="startDate" column="start_date"/>
+		<result property="endDate" column="end_date"/>
+	</resultMap>
+	
+	<resultMap type="com.noah.domain.Tutor" id = "TutorResult">
+	    <id property="tutorId" column = "tutor_id"></id>
+	    <result property="name" column="name"/>
+	    <result property="email" column="email"/>
+	    <!-- <collection/> tag can show the one-to-many relationship -->
+	    <collection property="courses" resultMap="CourseResult"/>
+	</resultMap>
+	
+	<resultMap type="com.noah.domain.Tutor" id = "TutorResultWithEmbeddedSelect">
+	    <id property="tutorId" column = "tutor_id"></id>
+	    <result property="name" column="name"/>
+	    <result property="email" column="email"/>
+	    <!-- <collection/> tag can work with join column and "sub select" -->
+	    <collection property="courses" column="tutor_id" select="findCourseByTutorId"/>
+	</resultMap>
+	
+	<select id="findCourseByTutorId" parameterType="int" resultMap="CourseResult">
+	   select course_id, name, description, start_date, end_date from course where tutor_id = #{tutorId}
+	</select>
+	
+	<select id="findTutorWithCoursesById" parameterType="int" resultMap="TutorResult">
+	   select t.tutor_id, t.name, t.email, c.course_id, c.name, c.description, c.start_date, c.end_date
+	   from tutor t left outer join course c on t.tutor_id = c.tutor_id 
+	   where t.tutor_id = #{tutorId}
+	</select>
+	
+	<select id="findTutorWithCoursesByIdEmbeddedSelect" parameterType="int" resultMap="TutorResultWithEmbeddedSelect">
+		select tutor_id, name, email from tutor where tutor_id = #{tutorId}
+	</select>
+	
+	<!-- 
+	   here no parameterType, so Mybatis will fill param1 and param2 in order of parameters in findCourseByNameAndDescription() method.
+	   And #{param1} is ok, but #{param_1} is NOT allowed , please notice the format of the params  
+	 -->
+	<select id="findCourseByNameAndDescription" resultMap="CourseResult">
+	   select course_id, name, description, start_date, end_date from course where name = #{param1} and  description = #{param2}
+	</select>
+	
+	<!-- parameterType can be a map -->
+	<select id="findCourseByConditionsWithIf" parameterType="map" resultMap="CourseResult">
+	   select course_id, name, description, start_date, end_date from course 
+	   <!-- <where> tag will help remove the first and/or in the conditions automatically -->
+	   <where>
+	     <if test="name != null">
+	        name like '%' || #{name} || '%'
+	     </if>
+	     <if test="description != null">
+	        and description like '%' || #{description} || '%'
+	     </if>
+	   </where>
+	</select>
+	
+	<!-- the difference between "choose-when" and "if" is like "switch-case" and "if" -->
+	<select id="findCourseByConditionsWithChooseWhen" parameterType="map" resultMap="CourseResult">
+	   select course_id, name, description, start_date, end_date from course 
+	   <where>
+	     <choose>
+	       <when test = "name != null">
+	         name like '%' || #{name} || '%'
+	       </when>
+	       <when test = "description != null">
+	         description like '%' || #{description} || '%'
+	       </when>
+	       <otherwise>
+	         start_date is null or end_date is null 
+	       </otherwise>
+	     </choose>
+	   </where>
+	</select>
+	
+	<select id="countCourseForEachTutor" resultType="com.noah.domain.TutorCourseCount">
+	  select t.tutor_id as tutorId, t.name as tutorName, count(c.course_id) as courseCount 
+	  from tutor t left outer join course c on t.tutor_id = c.tutor_id 
+	  group by (tutorId, tutorName)
+	</select>
+</mapper>
