@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noah.mappers.SpecialTypeMapper">
+  <resultMap type="com.noah.domain.SpecialType" id="SpecialTypeResult">
+    <id property="id" column = "id"/>
+    <result property="pic" column = "bytes_data"/>
+  </resultMap>
+  <insert id="insertSpecialType" parameterType="com.noah.domain.SpecialType">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+      select nextval('special_type_seq')
+    </selectKey>
+    insert into special_type (id, bytes_data) values (#{id}, #{pic})
+  </insert>
+  <select id="selectSpecialTypeById" parameterType="int" resultMap="SpecialTypeResult">
+     select id, bytes_data from special_type where id = #{id}  
+  </select>
+</mapper>
