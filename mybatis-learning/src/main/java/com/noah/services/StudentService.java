@@ -49,6 +49,46 @@ public class StudentService {
 			sqlSession.close();
 		}
 	}
+	
+	public int createStudent(Student student){
+		logger.debug("Create Student {}", student);
+		SqlSession sqlSession = MyBatisSqlSessionFactory.openSession();
+		try{
+			StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
+			int count = studentMapper.insertStudent(student);
+			//by default, the connection from the sqlSession is NOT auto commit, Do it manually for insert/update/delete operation
+			sqlSession.commit();
+			return count;
+		}finally{
+			sqlSession.close();
+		}
+	}
+	
+	public int updateStudent(Student student){
+		logger.debug("Update Student {}", student);
+		SqlSession sqlSession = MyBatisSqlSessionFactory.openSession();
+		try{
+			StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
+			int count = studentMapper.updateStudent(student);
+			sqlSession.commit();
+			return count;
+		}finally{
+			sqlSession.close();
+		}
+	}
+	
+	public int deleteStudentById(Integer id){
+		logger.debug("Delete Student By Id {}", id);
+		SqlSession sqlSession = MyBatisSqlSessionFactory.openSession();
+		try{
+			StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
+			int count = studentMapper.deleteStudentById(id);
+			sqlSession.commit();
+			return count;
+		}finally{
+			sqlSession.close();
+		}
+	}
 
 
 

@@ -11,5 +11,8 @@ public interface StudentMapper {
 	Student findStudentWIthAddressById(Integer id);	
 	Student findStudentWIthAddressByIdNeedOneMoreSelect(Integer id);
 	Address findAddressById(Integer id);
+	int insertStudent(Student student);
+	int updateStudent(Student student);
+	int deleteStudentById(Integer id);
 	
 }

@@ -76,5 +76,20 @@
 	<select id="findAddressById" parameterType="int" resultMap="AddressResult">
 		select addr_id, street, city, zip_code from address where addr_id = #{id}
 	</select>
+	
+	<insert id="insertStudent" parameterType="Student">
+	   <selectKey keyProperty="studId" resultType="int" order="BEFORE">
+	     select nextval('student_seq') 
+	   </selectKey>
+	   insert into students (stud_id, name, email, dob) values (#{studId}, #{name}, #{email}, #{dob})
+	</insert>
+	
+	<update id="updateStudent" parameterType="Student">
+	   update students set name = #{name}, email = #{email}, dob = #{dob}, addr_id = #{address.addrId} where stud_id = #{studId}
+	</update>
+	
+	<delete id="deleteStudentById" parameterType="int">
+		delete from students where stud_id = #{id} 
+	</delete>
 
 </mapper>
