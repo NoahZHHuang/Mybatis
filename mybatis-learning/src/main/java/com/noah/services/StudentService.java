@@ -39,6 +39,16 @@ public class StudentService {
 		}
 	}
 	
+	public Student findStudentWIthAddressByIdNeedOneMoreSelect(Integer id){
+		logger.debug("Select student with address by ID {}, need one more select", id);
+		SqlSession sqlSession = MyBatisSqlSessionFactory.openSession();
+		try{
+			StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
+			return studentMapper.findStudentWIthAddressByIdNeedOneMoreSelect(id);
+		}finally{
+			sqlSession.close();
+		}
+	}
 
 
 

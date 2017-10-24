@@ -4,8 +4,10 @@
 <!-- namespace is identical with the java interface full path -->
 <mapper namespace="com.noah.mappers.StudentMapper">
 
-	<!-- the "type" in resultMap can be shortly "Student" not "com.noah.domain.Student", 
-		because in mybatis-config.xml, the typeAlias convert it -->
+	<!-- 
+	    the "type" in resultMap can be shortly "Student" not "com.noah.domain.Student", 
+		because in mybatis-config.xml, the typeAlias convert it 
+    -->
 	<resultMap id="StudentResult" type="Student">
 		<id property="studId" column="stud_id"></id>
 		<result property="name" column="name"></result>
@@ -14,24 +16,41 @@
 	</resultMap>
 
 
-	<!-- the resultMap below bind the fields in Student and Address together 
+	<!-- 
+	    the resultMap below bind the fields in Student and Address together 
 		it is not good for reusing. So we can extract the Address out embed it into 
-		Student with <association/> tag -->
-	<!-- <resultMap id="StudentWithAddressResult" type="Student"> <id property="studId" 
-		column="stud_id"></id> <result property="name" column="name"></result> <result 
-		property="email" column="email"></result> <result property="dob" column="dob"></result> 
-		<result property="address.addrId" column="addr_id"></result> <result property="address.street" 
-		column="street"></result> <result property="address.city" column="city"></result> 
-		<result property="address.zipCode" column="zip_code"></result> </resultMap> -->
-
-	<resultMap id="StudentWithAddressResult" type="Student">
+		Student with <association/> tag 
+	-->
+	<!-- 
+	    <resultMap id="StudentWithAddressResult" type="Student"> 
+		    <id property="studId" column="stud_id"></id> 
+		    <result property="name" column="name"></result> 
+		    <result property="email" column="email"></result> 
+		    <result property="dob" column="dob"></result> 
+			<result property="address.addrId" column="addr_id"></result> 
+			<result property="address.street" column="street"></result> 
+			<result property="address.city" column="city"></result> 
+			<result property="address.zipCode" column="zip_code"></result>
+		</resultMap> 
+    -->
+    
+    <resultMap id="StudentWithAddressResult" type="Student">
 		<id property="studId" column="stud_id"></id>
 		<result property="name" column="name"></result>
 		<result property="email" column="email"></result>
 		<result property="dob" column="dob"></result>
-		<!-- association need to work with the "join column" and specify the "sub 
-			select". So here we need to know, if we want to reuse the resultMap "AddressResult", 
-			we need to run one more "sub select" -->
+		<association property="address" resultMap = "AddressResult" />
+	</resultMap>
+
+	<resultMap id="StudentWithAddressResultNeedOneMoreSelect" type="Student">
+		<id property="studId" column="stud_id"></id>
+		<result property="name" column="name"></result>
+		<result property="email" column="email"></result>
+		<result property="dob" column="dob"></result>
+		<!-- 
+		    association can work with the "join column" and specify the "sub select".
+		    Notice: here will run one more select statement 
+		-->
 		<association property="address" column="addr_id" select="findAddressById" />
 	</resultMap>
 
@@ -43,20 +62,19 @@
 	</resultMap>
 
 	<select id="findAllStudents" resultMap="StudentResult">
-		select * from students
-		order by name desc
+		select * from students order by name desc
 	</select>
 
-	<select id="findStudentWIthAddressById" parameterType="int"
-		resultMap="StudentWithAddressResult">
-		select S.stud_id, S.email, S.dob, A.addr_id, A.street, A.city, A.zip_code
-		from students S left join address A on S.addr_id = A.addr_id where
-		S.stud_id = #{id}
+	<select id="findStudentWIthAddressById" parameterType="int" resultMap="StudentWithAddressResult">
+		select S.stud_id, S.email, S.dob, A.addr_id, A.street, A.city, A.zip_code from students S left join address A on S.addr_id = A.addr_id where S.stud_id = #{id}
+	</select>
+	
+    <select id="findStudentWIthAddressByIdNeedOneMoreSelect" parameterType="int" resultMap="StudentWithAddressResultNeedOneMoreSelect">
+		select stud_id, email, dob, addr_id from students where stud_id = #{id}
 	</select>
 
 	<select id="findAddressById" parameterType="int" resultMap="AddressResult">
-		select addr_id, street, city, zip_code from address where addr_id =
-		#{id}
+		select addr_id, street, city, zip_code from address where addr_id = #{id}
 	</select>
 
 </mapper>

@@ -27,5 +27,10 @@ public class StudentServiceTest {
 	public void testFindStudentWIthAddressById(){
 		System.out.println(studentService.findStudentWIthAddressById(17));
 	}
+	
+	@Test
+	public void testFindStudentWIthAddressByIdNeedOneMoreSelect(){
+		System.out.println(studentService.findStudentWIthAddressByIdNeedOneMoreSelect(17));
+	}
 
 }

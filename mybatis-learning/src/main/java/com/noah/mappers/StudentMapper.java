@@ -8,7 +8,8 @@ import com.noah.domain.Student;
 public interface StudentMapper {
 
 	List<Student> findAllStudents();
-	Student findStudentWIthAddressById(Integer id);
+	Student findStudentWIthAddressById(Integer id);	
+	Student findStudentWIthAddressByIdNeedOneMoreSelect(Integer id);
 	Address findAddressById(Integer id);
 	
 }
